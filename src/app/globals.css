@@ -1,26 +1,88 @@
 @import "tailwindcss";
 
+/*
+ * 밝고 조용한 작업대. 화면에서 색을 가진 것은 생성된 이미지뿐이고,
+ * UI 는 옅은 회백과 잉크색 두 가지로만 말한다.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg:      #f4f4f2;  /* 방 */
+  --surface: #ffffff;  /* 패널 */
+  --sunken:  #ebebe8;  /* 입력 · 이미지가 놓이기 전 자리 */
+  --border:  #e6e6e3;
+  --text:    #1c1c1e;
+  --muted:   #6b6b70;
+  --faint:   #a5a5aa;
+  --alarm:   #c8443a;
+
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+
+  color-scheme: light;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-alarm: var(--alarm);
+  --font-sans: var(--font-pretendard), ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--bg);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--text);
+  color: var(--surface);
+}
+
+:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/*
+ * 생성 중인 자리 위를 빛이 한 번 쓸고 지나간다.
+ * 페이지에서 저절로 움직이는 것은 이것 하나뿐이다.
+ */
+@keyframes sweep {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(220%); }
+}
+
+.sweep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 45%;
+  background: linear-gradient(100deg, transparent, rgb(255 255 255 / 0.85), transparent);
+  animation: sweep 2.1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
